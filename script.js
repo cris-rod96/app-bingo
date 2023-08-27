@@ -6,14 +6,22 @@ function generarNumero() {
 }
 function printTable(codigo) {
   let containerTable = document.getElementById("container-table");
+  let obj = {};
   containerTable.innerHTML = "";
   let numeros = dataBingo[codigo];
 
   numeros.forEach((num) => {
+    if (!obj.hasOwnProperty(num)) {
+      obj[num] = 0;
+    } else {
+      obj[num] = obj[num] + 1;
+    }
     containerTable.innerHTML += `<span>${num}</span>`;
   });
 
   containerTable.classList.remove("hide");
+
+  console.log(obj);
 }
 function printData() {
   dataBingo = getData();
@@ -52,15 +60,20 @@ function generarTablas(cantidad, codigoInicio) {
     for (let i = 0; i < 25; i++) {
       // Genero el número aleatorio
       let numero = generarNumero();
-      // Pregunto si el número esta en la lista
-      if (!numeros.includes(numero)) {
-        if (numero < 10) {
-          numero = `0${numero}`;
-        } // Si no se encuentra lo agrego
-        numeros.push(numero.toString());
+      if (numero < 10) {
+        let miNumero = `0${numero}`;
+        if (!numeros.includes(miNumero)) {
+          numeros.push(miNumero);
+        } else {
+          i--;
+        }
       } else {
-        // Si no existe resto i para que vuelva a generar un numero para esa posicion
-        i--;
+        let miNumero = numero.toString();
+        if (!numeros.includes(miNumero)) {
+          numeros.push(miNumero);
+        } else {
+          i--;
+        }
       }
     }
     tablasGeneradas[miCodigo] = numeros;
